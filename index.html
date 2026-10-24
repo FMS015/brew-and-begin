@@ -443,8 +443,15 @@ let D=ls("ct-days",{}),J=ls("ct-jots",[]),intent=ls("ct-intent","");
 const dstr=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.toLocaleDateString("en-CA")};
 const day=()=>D[dstr(0)]||(D[dstr(0)]={n:0,m:0,log:""});
 
-let mode="focus",total=S.focus*60,left=total,running=false,endAt=0,tick=null,done=0,note="";
+const TIMER_KEY="ct-timer",savedTimer=ls(TIMER_KEY,null),validModes=["focus","short","long"];
+let mode=validModes.includes(savedTimer?.mode)?savedTimer.mode:"focus";
+let total=Number.isFinite(savedTimer?.total)&&savedTimer.total>0?savedTimer.total:S[mode]*60;
+let left=Number.isFinite(savedTimer?.left)&&savedTimer.left>=0?savedTimer.left:total;
+let running=!!savedTimer?.running&&Number.isFinite(savedTimer?.endAt),endAt=running?savedTimer.endAt:0;
+if(running)left=Math.max(0,Math.ceil((endAt-Date.now())/1000));
+let tick=null,done=Number.isFinite(savedTimer?.done)?savedTimer.done:0,note=typeof savedTimer?.note==="string"?savedTimer.note:"";
 const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function saveTimer(){put(TIMER_KEY,{mode,total,left,running,endAt,done,note,intent})}
 
 function paint(){
   const p=1-left/total,lv=mode==="focus"?p:1-p,f=x=>x.toFixed(1),A=(i,k,v)=>$(i).setAttribute(k,v);
@@ -484,10 +491,10 @@ function render(){
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===mode));
   paint();journey();
 }
-function setMode(m){stop();mode=m;total=left=S[m]*60;const h=$("hg");h.classList.remove("flip");void h.getBoundingClientRect();h.classList.add("flip");render()}
-function stop(){running=false;clearInterval(tick)}
-function loop(){left=Math.max(0,Math.round((endAt-Date.now())/1000));if(left<=0){finish();return}render()}
-function start(){note="";$("intent").hidden=true;running=true;endAt=Date.now()+left*1000;clearInterval(tick);tick=setInterval(loop,250);render()}
+function setMode(m){stop();mode=m;total=left=S[m]*60;saveTimer();const h=$("hg");h.classList.remove("flip");void h.getBoundingClientRect();h.classList.add("flip");render()}
+function stop(){if(running)left=Math.max(0,Math.ceil((endAt-Date.now())/1000));running=false;endAt=0;clearInterval(tick);saveTimer()}
+function loop(){left=Math.max(0,Math.ceil((endAt-Date.now())/1000));if(left<=0){finish();return}render()}
+function start(){note="";$("intent").hidden=true;running=true;endAt=Date.now()+left*1000;saveTimer();clearInterval(tick);tick=setInterval(loop,250);render()}
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 function finish(){
   stop();if(S.chime)chime();
@@ -661,7 +668,7 @@ $("picsel").value=S.pic;$("picsel").onchange=e=>{S.pic=e.target.value;save();app
 
 ["focus","short","long"].forEach(k=>{
   const el=$("d-"+k);el.value=S[k];
-  el.onchange=()=>{let v=Math.round(+el.value)||S[k];v=Math.min(k==="focus"?120:60,Math.max(1,v));el.value=v;S[k]=v;save();if(k===mode&&!running&&left===total){total=left=v*60;render()}};
+  el.onchange=()=>{let v=Math.round(+el.value)||S[k];v=Math.min(k==="focus"?120:60,Math.max(1,v));el.value=v;S[k]=v;save();if(k===mode&&!running&&left===total){total=left=v*60;saveTimer();render()}};
 });
 [["ask","ask"],["auto","auto"],["chime","chime"]].forEach(([id,k])=>{$(id).checked=S[k];$(id).onchange=e=>{S[k]=e.target.checked;save()}});
 $("sound").value=S.sound;$("sound").onchange=e=>{S.sound=e.target.value;save();if(amb)ambStart();ambLabel()};
@@ -672,7 +679,7 @@ function begin(skip){if(!skip){intent=$("iq-in").value.trim();put("ct-intent",in
 $("go").onclick=()=>{$("status").textContent="";if(running){stop();render()}else if(mode==="focus"&&left===total&&S.ask)showIntent();else start()};
 $("begin").onclick=()=>begin(false);$("skip").onclick=()=>begin(true);
 $("iq-in").onkeydown=e=>{if(e.key==="Enter")begin(false);if(e.key==="Escape")$("intent").hidden=true};
-$("reset").onclick=()=>{stop();left=total;note="";$("intent").hidden=true;$("status").textContent="";render()};
+$("reset").onclick=()=>{stop();left=total;note="";$("intent").hidden=true;$("status").textContent="";saveTimer();render()};
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{note="";$("intent").hidden=true;$("status").textContent="";setMode(b.dataset.mode)});
 
 function renderJots(){
@@ -738,6 +745,9 @@ appNav.addEventListener("click",e=>{if(e.target.closest("[data-tour-launch]"))st
 document.addEventListener("keydown",e=>{if(!walkLayer.hidden){if(e.key==="Escape"){e.preventDefault();finishWalkthrough()}else if(e.key==="ArrowRight"){e.preventDefault();$("walk-next").click()}else if(e.key==="ArrowLeft"&&walkIndex>0){e.preventDefault();$("walk-prev").click()}}});
 window.addEventListener("resize",placeWalkTarget);
 if(!ls("ct-tour-seen",false))setTimeout(startWalkthrough,650);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&running)loop();else saveTimer()});
+window.addEventListener("pagehide",saveTimer);
+if(running){tick=setInterval(loop,250);loop()}else saveTimer();
 </script>
 </body>
 </html>
