@@ -69,6 +69,11 @@ main{width:100%;max-width:560px;background:var(--board);color:var(--milk);border
 #hg{transform-box:fill-box;transform-origin:center}.flip{animation:flip 1.4s ease-in-out}
 @keyframes flip{from{transform:rotate(180deg)}to{transform:rotate(0)}}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
+.music-controls{display:inline-flex;align-items:center;gap:4px}.music-step{min-width:38px;padding-inline:10px!important;font-size:1.15rem!important;line-height:1}
+.audio-dock{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;max-width:520px;margin:14px auto 0}
+.audio-dock .chip{min-height:42px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.audio-dock #amb{width:136px;flex:0 0 136px}.audio-dock .music-controls{flex:0 0 auto}
+.audio-dock #musbtn{width:168px;flex:0 0 168px}.audio-dock .music-step{width:40px;min-width:40px;height:40px;flex:0 0 40px;padding:7px!important}
 #time{font:400 clamp(4.6rem,22vw,8.4rem)/1 "Fraunces",Georgia,serif;font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.01em;margin:6px 0 2px}
 #label{color:var(--milk-dim);margin:0 0 6px}
 #aim{color:var(--milk);margin:0 0 16px;min-height:1.5em;font-style:italic}
@@ -94,6 +99,18 @@ input::placeholder{color:var(--milk-dim);opacity:.85}
 .chip{background:none;border:1px solid var(--line);color:var(--milk);border-radius:999px;padding:9px 16px;font:500 .9rem "DM Sans",sans-serif;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--milk);color:var(--on-milk);border-color:var(--milk)}
 #stats{margin:16px 0 0;color:var(--milk-dim);font-size:.95rem}
+#goal-progress{width:100%;max-width:520px;margin:12px auto 0;padding:12px 14px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:14px;background:color-mix(in srgb,var(--board) 55%,transparent);text-align:left}
+#goal-progress[hidden]{display:none}#goal-copy{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:var(--muted)}#goal-copy strong{color:var(--ink);font-weight:600}
+#goal-track{height:8px;margin-top:8px;border-radius:999px;background:color-mix(in srgb,var(--muted) 22%,transparent);overflow:hidden}#goal-fill{height:100%;width:0;background:var(--caramel);border-radius:inherit;transition:width .45s ease}
+.report-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.report-stat{padding:14px 12px;border-radius:14px;background:var(--board-2);text-align:center}
+.report-stat strong{display:block;font:600 1.3rem/1.15 "Fraunces",Georgia,serif;color:var(--milk)}.report-stat span{display:block;margin-top:5px;color:var(--milk-dim);font-size:.78rem}
+.history-list{list-style:none;margin:0;padding:0;display:grid;gap:9px}.history-list li{display:grid;grid-template-columns:minmax(72px,1fr) 2fr auto;align-items:center;gap:10px;color:var(--milk-dim);font-size:.85rem}
+.history-track{height:8px;border-radius:99px;background:color-mix(in srgb,var(--milk) 12%,transparent);overflow:hidden}.history-bar{height:100%;width:0;border-radius:inherit;background:var(--caramel);transition:width .4s ease}.history-value{min-width:62px;text-align:right;color:var(--milk)}
+.sound-setting{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px}.sound-setting label{margin:0}.sound-setting button{min-height:44px;white-space:nowrap}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.range-row{display:flex;align-items:center;gap:12px}.range-row input{flex:1}.range-row output{min-width:3ch;color:var(--milk);font-size:.9rem;text-align:right}
+@media(max-width:420px){.report-stats{gap:6px}.report-stat{padding:12px 7px}.report-stat strong{font-size:1.12rem}.history-list li{grid-template-columns:68px 1fr auto;gap:7px;font-size:.78rem}}
 #status:not(:empty){margin:14px 0 0;padding:12px 16px;background:var(--board-2);border-radius:14px;color:var(--milk);animation:in 1.2s ease}
 details.sec{margin-top:14px;border-top:1px solid var(--line);padding-top:14px;text-align:left}
 details.sec summary{cursor:pointer;font-weight:600;list-style:none;text-align:center;color:var(--milk)}
@@ -255,10 +272,10 @@ main{max-width:600px;padding:0;background:transparent;border:0;border-radius:0;b
 .timer-card button.pill{min-height:50px;padding:12px 24px}
 .timer-card #go{min-width:170px}
 .timer-card #intent{margin-top:15px}
-#app>.foot,#app>#stats,#app>#status{width:100%;max-width:520px;margin-left:auto;margin-right:auto}
-#app>.foot{margin-top:14px;padding:12px 4px 0;border-top:1px solid color-mix(in srgb,var(--line) 65%,transparent);justify-content:space-between}
-#app>#stats{font-size:.84rem;margin-top:7px;color:var(--muted)}#app>.foot .chip:not([aria-pressed="true"]){color:var(--ink);border-color:color-mix(in srgb,var(--ink) 24%,transparent)}
-#app>#status:not(:empty){margin-top:10px}
+#app>.foot,#app>#stats,#app>#status,#app>.audio-dock{width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+#app>.foot{margin-top:14px;padding:12px 4px 0;border-top:1px solid color-mix(in srgb,var(--line) 65%,transparent);justify-content:center}
+#app>#stats{font-size:.84rem;margin-top:7px;color:var(--muted)}#app>.audio-dock .chip:not([aria-pressed="true"]){color:var(--ink);border-color:color-mix(in srgb,var(--ink) 24%,transparent)}
+#app>#status:not(:empty){margin-top:10px}#app>#status:empty{display:none}
 #jotbox{width:100%;max-width:520px;color:var(--milk);margin:18px auto 0;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--board);box-shadow:0 8px 26px rgba(0,0,0,.07);overflow:hidden}
 #jotbox summary{padding:14px 18px;text-align:left;font:600 1rem "DM Sans",sans-serif;color:var(--milk)}
 #jotbox[open] summary{border-bottom:1px solid var(--line)}
@@ -282,6 +299,11 @@ footer{max-width:520px;margin-top:18px;font-size:.78rem;opacity:.85}
  .timer-card #go{min-width:140px}
  .timer-card button.pill{padding:11px 17px}
  #app>.foot{justify-content:center;gap:12px}
+ #app>.audio-dock{gap:4px}
+ #app>.audio-dock .music-controls{gap:3px}
+ #app>.audio-dock #amb{width:clamp(88px,28vw,112px);flex-basis:clamp(88px,28vw,112px)}
+ #app>.audio-dock #musbtn{width:clamp(112px,39vw,150px);flex-basis:clamp(112px,39vw,150px)}
+ #app>.audio-dock .music-step{width:clamp(32px,10vw,36px);min-width:clamp(32px,10vw,36px);height:38px;flex-basis:clamp(32px,10vw,36px)}
  #app>.journey{justify-content:center}
  #jotbox .panel{padding-inline:13px}
  #jotbox .row{flex-wrap:wrap}
@@ -369,10 +391,11 @@ footer{max-width:520px;margin-top:18px;font-size:.78rem;opacity:.85}
   </div>
   <div class="foot">
     <div class="journey" id="journey" role="img" aria-label="Today’s journey"></div>
-    <div class="chips"><button class="chip" id="amb" type="button" aria-pressed="false">Rain: off</button><button class="chip" id="musbtn" type="button" aria-pressed="false">Music: off</button></div>
   </div>
   <p id="stats"></p>
+  <div id="goal-progress" hidden aria-label="Daily focus goal progress"><div id="goal-copy"><strong>Today’s focus goal</strong><span id="goal-text"></span></div><div id="goal-track" role="progressbar" aria-label="Daily focus goal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="goal-fill"></div></div></div>
   <p id="status" role="status" aria-live="polite"></p>
+  <div class="audio-dock" aria-label="Background audio controls"><button class="chip" id="amb" type="button" aria-pressed="false">Rain: off</button><div class="music-controls" role="group" aria-label="Music controls"><button class="chip music-step" id="music-prev" type="button" aria-label="Previous music track" title="Previous track">‹</button><button class="chip" id="musbtn" type="button" aria-pressed="false">Music: off</button><button class="chip music-step" id="music-next" type="button" aria-label="Next music track" title="Next track">›</button></div></div>
 
   <details class="sec" id="jotbox">
     <summary id="jotsum">Jot pad</summary>
@@ -385,7 +408,14 @@ footer{max-width:520px;margin-top:18px;font-size:.78rem;opacity:.85}
   <details class="sec">
     <summary>Your rhythm</summary>
     <div class="panel">
+      <div class="report-stats" aria-label="Focus time totals">
+        <div class="report-stat"><strong id="report-today">0m</strong><span>Today</span></div>
+        <div class="report-stat"><strong id="report-week">0m</strong><span>Last 7 days</span></div>
+        <div class="report-stat"><strong id="report-all">0m</strong><span>All time</span></div>
+      </div>
+      <p class="note" id="report-sessions"></p>
       <div class="week" id="week"></div>
+      <ul class="history-list" id="history-list" aria-label="Daily focus time for the last 7 days"></ul>
       <p class="note" id="streak"></p>
     </div>
   </details>
@@ -417,7 +447,16 @@ footer{max-width:520px;margin-top:18px;font-size:.78rem;opacity:.85}
       </fieldset>
       <label class="chk"><input type="checkbox" id="ask"> Ask for an intention before each focus session</label>
       <label class="chk"><input type="checkbox" id="auto"> Start the next session automatically</label>
-      <label class="chk"><input type="checkbox" id="chime"> Play a soft chime when a session ends</label>
+      <label class="chk"><input type="checkbox" id="chime"> Play a sound when a session ends</label>
+      <fieldset><legend>Session-end sound</legend>
+        <div class="sound-setting"><label class="sr-only" for="end-sound">Choose a session-end sound</label><select id="end-sound"><option value="soft2">Soft bell</option><option value="bell">Gentle bell</option><option value="cafe">Café chime</option><option value="double">Double chime</option><option value="notification">Notification</option><option value="beep">Beep pair</option><option value="faahh">Faaahhh</option><option value="khatam">Khatam</option><option value="pendulo">Pendulo</option></select><button class="chip" id="end-sound-preview" type="button">Preview</button></div>
+        <label for="end-volume">Volume</label><div class="range-row"><input type="range" id="end-volume" min="0" max="1" step="0.05" aria-label="Session-end sound volume"><output id="end-volume-label" for="end-volume"></output></div>
+      </fieldset>
+      <fieldset><legend>Daily focus goal</legend>
+        <label class="chk"><input type="checkbox" id="goal-enabled"> Show my daily goal</label>
+        <label for="daily-goal">Goal in minutes</label><input type="number" id="daily-goal" min="15" max="600" step="15" inputmode="numeric">
+        <p class="note">Your progress uses completed focus sessions on this device.</p>
+      </fieldset>
       <label>Ambient sound
         <select id="sound"><option value="rain">Rain</option><option value="ocean">Ocean waves</option><option value="stream">Gentle stream</option><option value="storm">Distant storm</option><option value="fire">Fireplace</option><option value="forest">Forest</option><option value="night">Summer night</option><option value="wind">Soft wind</option><option value="chimes">Wind chimes</option><option value="bowls">Singing bowls</option><option value="cafe">Café chatter</option><option value="brown">Brown noise</option></select>
       </label>
@@ -432,16 +471,23 @@ footer{max-width:520px;margin-top:18px;font-size:.78rem;opacity:.85}
 <footer>Shortcuts: Space starts or pauses, R resets, 1–3 switch session, J opens the jot pad.</footer>
 <script>
 const $=id=>document.getElementById(id);
-const S={skin:"auto",pic:"cup",focus:25,short:5,long:15,ask:true,auto:false,chime:true,sound:"rain",vol:.35,music:"keys",mvol:.6};
+const S={skin:"auto",pic:"cup",focus:25,short:5,long:15,ask:true,auto:false,chime:true,endSound:"soft2",endVol:.55,goalEnabled:false,dailyGoal:120,sound:"rain",vol:.35,music:"keys",mvol:.6};
 const SNAME={rain:"Rain",ocean:"Ocean waves",stream:"Gentle stream",storm:"Distant storm",fire:"Fireplace",forest:"Forest",night:"Summer night",wind:"Soft wind",chimes:"Wind chimes",bowls:"Singing bowls",cafe:"Café chatter",brown:"Brown noise"};
 const PLAB={cup:"Coffee cup that fills as your session progresses",sun:"Sun rising over hills as your session progresses",hour:"Hourglass with sand running down",plant:"Plant that grows as your session progresses"};
 const ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
 const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 Object.assign(S,ls("ct-s",{}));if(!SNAME[S.sound])S.sound="rain";
+if(!["soft2","bell","cafe","double","notification","beep","faahh","khatam","pendulo"].includes(S.endSound))S.endSound="soft2";
+S.endVol=Math.min(1,Math.max(0,Number.isFinite(+S.endVol)?+S.endVol:.55));
+S.dailyGoal=Math.min(600,Math.max(15,Math.round((Number.isFinite(+S.dailyGoal)?+S.dailyGoal:120)/15)*15));
 const save=()=>put("ct-s",S);
 let D=ls("ct-days",{}),J=ls("ct-jots",[]),intent=ls("ct-intent","");
 const dstr=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.toLocaleDateString("en-CA")};
 const day=()=>D[dstr(0)]||(D[dstr(0)]={n:0,m:0,log:""});
+const dayMinutes=key=>Math.max(0,Number(D[key]?.m)||0),daySessions=key=>Math.max(0,Number(D[key]?.n)||0);
+const sumDays=span=>{let sum=0;for(let o=0;o<span;o++)sum+=dayMinutes(dstr(o));return sum};
+const sumSessions=span=>{let sum=0;for(let o=0;o<span;o++)sum+=daySessions(dstr(o));return sum};
+function timeLabel(minutes){const m=Math.max(0,Math.round(minutes));if(m<60)return m+"m";const h=Math.floor(m/60),r=m%60;return h+"h"+(r?" "+r+"m":"")}
 
 const TIMER_KEY="ct-timer",savedTimer=ls(TIMER_KEY,null),validModes=["focus","short","long"];
 let mode=validModes.includes(savedTimer?.mode)?savedTimer.mode:"focus";
@@ -480,6 +526,8 @@ function journey(){
   const f=(t.log.match(/f/g)||[]).length,b=t.log.length-f;
   el.setAttribute("aria-label","Today’s journey: "+f+" focus sessions and "+b+" breaks so far");
   $("stats").textContent=t.n+" cup"+(t.n===1?"":"s")+" earned today · "+t.m+" focused min";
+  const goal=$("goal-progress");goal.hidden=!S.goalEnabled;
+  if(S.goalEnabled){const pct=Math.min(100,Math.round(t.m/S.dailyGoal*100));$("goal-text").textContent=t.m+" / "+S.dailyGoal+" min";$("goal-fill").style.width=pct+"%";$("goal-track").setAttribute("aria-valuenow",pct);$("goal-track").setAttribute("aria-valuetext",t.m+" of "+S.dailyGoal+" focus minutes")}
 }
 function render(){
   $("time").textContent=fmt(left);
@@ -494,21 +542,38 @@ function render(){
 function setMode(m){stop();mode=m;total=left=S[m]*60;saveTimer();const h=$("hg");h.classList.remove("flip");void h.getBoundingClientRect();h.classList.add("flip");render()}
 function stop(){if(running)left=Math.max(0,Math.ceil((endAt-Date.now())/1000));running=false;endAt=0;clearInterval(tick);saveTimer()}
 function loop(){left=Math.max(0,Math.ceil((endAt-Date.now())/1000));if(left<=0){finish();return}render()}
-function start(){note="";$("intent").hidden=true;running=true;endAt=Date.now()+left*1000;saveTimer();clearInterval(tick);tick=setInterval(loop,250);render()}
+function start(){note="";$("intent").hidden=true;try{ctx()}catch(e){}running=true;endAt=Date.now()+left*1000;saveTimer();clearInterval(tick);tick=setInterval(loop,250);render()}
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 function finish(){
-  stop();if(S.chime)chime();
+  stop();
   const t=day();let next,msg;
-  if(mode==="focus"){done++;t.n++;t.m+=S.focus;t.log+="f";next=done%4===0?"long":"short";
+  if(mode==="focus"){done++;t.n++;t.m+=Math.round(total/60);t.log+="f";next=done%4===0?"long":"short";
     msg=pick(["Nicely done. Let your shoulders drop and take a slow breath.","That’s a full cup. Stretch, sip some water, look out a window.","Session complete. However it went, you showed up."]);
     if(intent)msg+=" You were aiming for: “"+intent+"”.";note="Time for a breather"}
   else{t.log+="b";next="focus";msg=pick(["Break’s over whenever you’re ready. No rush.","Ready for another cup? Start when it feels right."]);note="Ready when you are"}
-  put("ct-days",D);setMode(next);$("status").textContent=msg;if(S.auto)start();
+  put("ct-days",D);setMode(next);$("status").textContent=msg;
+  if(S.chime)chime();
+  if(S.auto)start();
 }
 let ac=null;
-function ctx(){if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();return ac}
+function ctx(){if(!ac){const AudioContextClass=window.AudioContext||window.webkitAudioContext;if(!AudioContextClass)throw new Error("Web Audio is unavailable");ac=new AudioContextClass()}if(ac.state==="suspended")ac.resume().catch(()=>{});return ac}
 function blip(f0,f1,dur,v){const a=ctx(),t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.frequency.setValueAtTime(f0,t);o.frequency.linearRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur+.05)}
-function chime(){try{blip(392,392,2.4,.07)}catch(e){}}
+let endAudio=null;
+const END_CLIPS={notification:"notification.mp3",beep:"beep_beep.mp3",faahh:"faahh.mp3",khatam:"khatam.mp3",pendulo:"pendulo.mp3"};
+function ringTone(freq,offset,duration,level=1,wave="sine"){
+  const amp=S.endVol*.24*level;if(amp<=0)return;const a=ctx(),t=a.currentTime+offset,o=a.createOscillator(),g=a.createGain();
+  o.type=wave;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(amp,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(g).connect(a.destination);o.start(t);o.stop(t+duration+.04);
+}
+function bellNote(freq,offset,duration,level=1){ringTone(freq,offset,duration,level,"sine");ringTone(freq*2.01,offset,duration*.66,level*.28,"sine");ringTone(freq*2.73,offset,duration*.38,level*.13,"sine")}
+function playEndSound(kind=S.endSound){
+  if(endAudio){endAudio.pause();endAudio.currentTime=0;endAudio=null}
+  if(END_CLIPS[kind]){const clip=new Audio(END_CLIPS[kind]);clip.volume=S.endVol;clip.preload="auto";clip.loop=true;endAudio=clip;const stopClip=()=>setTimeout(()=>{if(endAudio===clip){clip.pause();clip.currentTime=0;endAudio=null}},2500),started=clip.play();if(started?.then)started.then(stopClip).catch(()=>{try{playEndSound("soft2")}catch(e){}});else stopClip();return}
+  if(kind==="soft2"){bellNote(784,0,2.35,1);ringTone(1175,.18,2.25,.42,"sine")}
+  else if(kind==="cafe"){[[784,0,1],[988,.42,.9],[1175,.84,.82]].forEach(([f,t,l])=>bellNote(f,t,1.95,l))}
+  else if(kind==="double"){bellNote(659,0,2.35,.9);bellNote(784,.72,2.45,1)}
+  else{bellNote(740,0,2.8,1);bellNote(988,.28,2.5,.65)}
+}
+function chime(){try{playEndSound()}catch(e){}}
 
 let amb=null;
 function ambStop(){if(amb){try{amb.src.stop();if(amb.lfo)amb.lfo.stop()}catch(e){}amb=null}}
@@ -650,6 +715,9 @@ function musStart(){
 }
 function musLabel(){const on=!!mus,b=$("musbtn");b.setAttribute("aria-pressed",on);b.textContent=MNAME[S.music]+": "+(on?"on":"off")}
 $("musbtn").onclick=()=>{try{mus?musStop():musStart()}catch(e){$("status").textContent="Sound isn’t available in this browser."}musLabel()};
+const musicTracks=[...$("music").options].map(option=>option.value);
+function stepMusic(direction){const wasPlaying=!!mus,index=musicTracks.indexOf(S.music);S.music=musicTracks[(index+direction+musicTracks.length)%musicTracks.length];$("music").value=S.music;save();if(wasPlaying){try{musStart()}catch(e){$("status").textContent="Sound isn’t available in this browser."}}musLabel()}
+$("music-prev").onclick=()=>stepMusic(-1);$("music-next").onclick=()=>stepMusic(1);
 $("music").value=S.music;$("music").onchange=e=>{S.music=e.target.value;save();if(mus)musStart();musLabel()};
 $("mvol").value=S.mvol;$("mvol").oninput=e=>{S.mvol=+e.target.value;save();if(mus)mus.master.gain.value=S.mvol};
 if(!MNAME[S.music]){S.music="keys";$("music").value="keys"}musLabel();
@@ -671,6 +739,13 @@ $("picsel").value=S.pic;$("picsel").onchange=e=>{S.pic=e.target.value;save();app
   el.onchange=()=>{let v=Math.round(+el.value)||S[k];v=Math.min(k==="focus"?120:60,Math.max(1,v));el.value=v;S[k]=v;save();if(k===mode&&!running&&left===total){total=left=v*60;saveTimer();render()}};
 });
 [["ask","ask"],["auto","auto"],["chime","chime"]].forEach(([id,k])=>{$(id).checked=S[k];$(id).onchange=e=>{S[k]=e.target.checked;save()}});
+$("end-sound").value=S.endSound;$("end-sound").onchange=e=>{S.endSound=e.target.value;save()};
+const endVolumeLabel=()=>{$("end-volume-label").textContent=Math.round(S.endVol*100)+"%"};
+$("end-volume").value=S.endVol;endVolumeLabel();$("end-volume").oninput=e=>{S.endVol=+e.target.value;if(endAudio)endAudio.volume=S.endVol;save();endVolumeLabel()};
+$("end-sound-preview").onclick=()=>{try{ctx();playEndSound();$("status").textContent="Previewing the "+$("end-sound").selectedOptions[0].text.toLowerCase()+"."}catch(e){$("status").textContent="Sound isn’t available in this browser."}};
+$("goal-enabled").checked=!!S.goalEnabled;$("daily-goal").value=S.dailyGoal;
+$("goal-enabled").onchange=e=>{S.goalEnabled=e.target.checked;save();render()};
+$("daily-goal").onchange=()=>{S.dailyGoal=Math.min(600,Math.max(15,Math.round((+$("daily-goal").value||120)/15)*15));$("daily-goal").value=S.dailyGoal;save();render()};
 $("sound").value=S.sound;$("sound").onchange=e=>{S.sound=e.target.value;save();if(amb)ambStart();ambLabel()};
 $("vol").value=S.vol;$("vol").oninput=e=>{S.vol=+e.target.value;save();if(amb){amb.g.gain.value=S.vol*amb.mult;if(amb.lg)amb.lg.gain.value=S.vol*amb.mult*amb.dep}};
 
@@ -691,9 +766,15 @@ function addJot(){const v=$("jot-in").value.trim();if(!v)return;J.unshift(v);put
 $("jot-add").onclick=addJot;$("jot-in").onkeydown=e=>{if(e.key==="Enter")addJot()};
 
 function rhythm(){
-  const w=$("week");w.textContent="";
-  for(let o=6;o>=0;o--){const d=new Date();d.setDate(d.getDate()-o);const s=document.createElement("span"),i=document.createElement("i"),on=D[dstr(o)]&&D[dstr(o)].n>0;
-    i.className=(on?"on ":"")+(o===0?"today":"");s.setAttribute("aria-label",d.toLocaleDateString("en",{weekday:"long"})+(on?": focused":": rest"));s.append(i,d.toLocaleDateString("en",{weekday:"narrow"}));w.appendChild(s)}
+  const w=$("week"),history=$("history-list"),rows=[];w.textContent="";history.textContent="";
+  for(let o=6;o>=0;o--){const d=new Date();d.setDate(d.getDate()-o);const key=dstr(o),minutes=dayMinutes(key),sessions=daySessions(key),s=document.createElement("span"),i=document.createElement("i");
+    i.className=(sessions>0?"on ":"")+(o===0?"today":"");s.setAttribute("aria-label",d.toLocaleDateString("en",{weekday:"long"})+": "+timeLabel(minutes)+" focused");s.append(i,d.toLocaleDateString("en",{weekday:"narrow"}));w.appendChild(s);rows.push({date:d,minutes,sessions})}
+  $("report-today").textContent=timeLabel(sumDays(1));$("report-week").textContent=timeLabel(sumDays(7));
+  const allMinutes=Object.keys(D).reduce((total,key)=>total+dayMinutes(key),0),allSessions=Object.keys(D).reduce((total,key)=>total+daySessions(key),0);
+  $("report-all").textContent=timeLabel(allMinutes);$("report-sessions").textContent=sumSessions(7)+" sessions in the last 7 days · "+allSessions+" completed all time";
+  const maxMinutes=Math.max(1,...rows.map(r=>r.minutes));
+  rows.forEach(({date,minutes,sessions})=>{const li=document.createElement("li"),label=document.createElement("span"),track=document.createElement("span"),bar=document.createElement("i"),value=document.createElement("strong");
+    label.textContent=date.toLocaleDateString("en",{weekday:"short",month:"short",day:"numeric"});track.className="history-track";track.setAttribute("aria-hidden","true");bar.className="history-bar";bar.style.width=(minutes?Math.max(3,minutes/maxMinutes*100):0)+"%";track.append(bar);value.className="history-value";value.textContent=timeLabel(minutes);li.setAttribute("aria-label",label.textContent+": "+timeLabel(minutes)+" across "+sessions+" focus sessions");li.append(label,track,value);history.appendChild(li)});
   const act=o=>D[dstr(o)]&&D[dstr(o)].n>0;
   let i=act(0)?0:1,st=0,rest=0;
   while(i<120){if(act(i)){st++;i++}else if(act(i+1)){rest++;i++}else break}
@@ -727,9 +808,9 @@ const walkSteps=[
  {screen:"home",target:".controls",title:"Your timer controls",copy:"Start begins the selected session. Pause and Resume let you step away and return; Reset starts that session over. If enabled, an optional intention prompt appears before focus."},
  {screen:"home",target:"#journey",title:"Cups mark your progress",copy:"Every completed focus session earns a coffee cup in today’s journey. Breaks have their own markers, and the line below shows your focused minutes."},
  {screen:"home",target:"#jotbox",title:"Jot Pad for passing thoughts",copy:"Keep distractions here while you focus. Add a thought, then mark it Done when you’ve taken care of it. Your list is saved in this browser."},
- {screen:"rhythm",target:"[data-screen=\"rhythm\"]",title:"Report on your rhythm",copy:"See your recent focus days and streak at a glance. Rest days are part of a healthy rhythm; this view is here to encourage you."},
- {screen:"settings",target:"#themes",title:"Make the space yours",copy:"Choose a theme and timer illustration, set your focus and break lengths, and decide whether sessions start automatically or end with a chime."},
- {screen:"settings",target:"#sound",title:"Ambient sound and music",copy:"Choose a gentle background sound and one of the calm generated music patterns. Adjust their volumes independently, or leave both off for quiet."}
+ {screen:"rhythm",target:"[data-screen=\"rhythm\"]",title:"Report on your rhythm",copy:"See focus time for today, this week, and all time, plus your recent daily history and streak. Rest days are part of a healthy rhythm; this view is here to encourage you."},
+ {screen:"settings",target:"#themes",title:"Make the space yours",copy:"Choose a theme and timer illustration, set your focus and break lengths, and decide whether sessions start automatically or play an end sound. Pick a sound, preview it, adjust its volume, and optionally set a daily focus goal."},
+ {screen:"settings",target:"#sound",title:"Ambient sound and music",copy:"Choose a gentle background sound and one of the calm generated music patterns. Change music tracks with the arrows on the timer screen. In Settings, choose and preview a session-end sound and adjust its volume."}
 ];
 let walkIndex=0,walkTarget=null;
 const walkLayer=document.createElement("div");walkLayer.id="walk-layer";walkLayer.className="walkthrough";walkLayer.hidden=true;walkLayer.innerHTML="<div class=\"walk-card\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"walk-title\" aria-describedby=\"walk-copy\" tabindex=\"-1\"><p class=\"walk-kicker\" id=\"walk-count\"></p><button type=\"button\" class=\"walk-close\" id=\"walk-close\" aria-label=\"Close walkthrough\">×</button><h2 class=\"walk-title\" id=\"walk-title\"></h2><p class=\"walk-copy\" id=\"walk-copy\"></p><div class=\"walk-progress\" id=\"walk-progress\" aria-hidden=\"true\"></div><div class=\"walk-actions\"><button type=\"button\" id=\"walk-skip\">Skip tour</button><button type=\"button\" id=\"walk-prev\">Back</button><button type=\"button\" class=\"walk-next\" id=\"walk-next\">Next</button></div></div>";
